@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>784 BOIS - Customer</title>
+<style>*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}body{background:#FDF2F8;padding:15px;text-align:center}h1{color:#1D4ED8;font-size:28px}h1 span{color:#EC4899}.tabs{display:flex;gap:8px;justify-content:center;margin:15px 0}.tabs button{padding:10px 18px;border-radius:20px;border:2px solid #F9A8D4;background:#fff;font-weight:800;cursor:pointer}.tabs button.on{background:#2563EB;color:#fff}.card{background:#fff;border-radius:16px;padding:16px;max-width:420px;margin:0 auto;text-align:left;display:none}.card.on{display:block}.wheel-wrap{position:relative;width:280px;height:280px;margin:10px auto}canvas{width:100%;height:100%}.pointer{position:absolute;top:-10px;left:50%;transform:translateX(-50%);font-size:32px}input,select,textarea{width:100%;padding:11px;border:2px solid #F9A8D4;border-radius:10px;margin:6px 0}button.btn{width:100%;padding:13px;background:linear-gradient(90deg,#2563EB,#EC4899);color:#fff;border:none;border-radius:12px;font-weight:800;margin-top:8px}.kode{background:#FEF08A;padding:10px;border-radius:10px;font-weight:800;text-align:center;margin:10px 0}.cabang{border:2px solid #FBCFE8;border-radius:12px;padding:12px;margin-bottom:10px}.cabang b{color:#1E3A8A}.sound-btn{background:#FEF08A;border:2px solid #F59E0B;padding:6px 12px;border-radius:20px;font-weight:800;cursor:pointer}</style></head>
+<body>
+<h1>784 <span>BOIS</span> 🥟</h1><p>Surakarta • Coffee Shop & Dimsum</p>
+<div class="tabs"><button id="t1" class="on" onclick="pindah('spin')">🎡 Spin Wheel</button><button id="t2" onclick="pindah('res')">📅 Reservasi</button><button id="t3" onclick="pindah('cab')">📍 Cabang</button></div>
+
+<div id="spin" class="card on">
+<b>🎡 Putar & Menangkan Hadiah!</b> <button class="sound-btn" id="btnSuara" onclick="toggleSuara()">🔊 Suara: ON</button>
+<input id="namaSpin" placeholder="Masukkan Nama Kamu dulu...">
+<div class="wheel-wrap"><div class="pointer">👇</div><canvas id="wheel" width="280" height="280"></canvas></div>
+<button class="btn" onclick="putar()">🎡 PUTAR SEKARANG</button>
+<div id="hasilSpin"></div>
+<small>1x putar per pembelian • Screenshot kode & kasih ke Kasir</small>
+</div>
+
+<div id="res" class="card">
+<b>📅 Reservasi Acara</b><p style="font-size:13px;color:#BE185D">Keluarga, Bukber, Meeting, Ulang Tahun, dll.</p>
+<input id="rNama" placeholder="Nama Pemesan *">
+<input id="rWa" placeholder="No. WA * Contoh: 0812xxxx">
+<select id="rAcara"><option value="Keluarga">👨‍👩‍👧 Acara Keluarga</option><option value="Bukber">🌙 Bukber / Buka Bersama</option><option value="Meeting">💼 Meeting / Rapat</option><option value="Ulang Tahun">🎂 Ulang Tahun</option><option value="Lainnya">✨ Acara Lainnya</option></select>
+<input id="rTanggal" type="date"><input id="rJam" type="time" value="18:00">
+<input id="rOrang" type="number" placeholder="Jumlah Orang * Contoh: 10">
+<textarea id="rCatatan" placeholder="Catatan: misal minta meja pojok, dekor, dll"></textarea>
+<button class="btn" onclick="booking()">✅ BOOKING SEKARANG</button>
+<div id="hasilRes"></div>
+</div>
+
+<div id="cab" class="card">
+<b>📍 Cabang Kami</b>
+<div class="cabang"><b>🏠 784 BOIS - Pusat Surakarta</b><br><small>Jl. Slamet Riyadi No. 784, Surakarta<br>⏰ 10.00 - 22.00 • 📞 0812-3456-7890</small><br><a href="https://maps.google.com/?q=Slamet+Riyadi+Surakarta" target="_blank">📍 Buka di Maps →</a></div>
+<div class="cabang"><b>🏠 784 BOIS - Solo Baru</b><br><small>Jl. Ir. Soekarno, Sukoharjo<br>⏰ 10.00 - 22.00 • 📞 0812-3456-7891</small><br><a href="https://maps.google.com/?q=Solo+Baru+Sukoharjo" target="_blank">📍 Buka di Maps →</a></div>
+<div class="cabang"><b>🏠 784 BOIS - Karanganyar</b><br><small>Jl. Lawu No. 12, Karanganyar<br>⏰ 09.00 - 21.00 • 📞 0812-3456-7892</small><br><a href="https://maps.google.com/?q=Karanganyar" target="_blank">📍 Buka di Maps →</a></div>
+</div>
+
+<script>
+function pindah(id){document.querySelectorAll('.card').forEach(c=>c.classList.remove('on'));document.getElementById(id).classList.add('on');document.querySelectorAll('.tabs button').forEach(b=>b.classList.remove('on'));document.getElementById(id=='spin'?'t1':id=='res'?'t2':'t3').classList.add('on')}
+let suaraOn=true;let audioCtx=null;
+function getCtx(){if(!audioCtx)audioCtx=new (window.AudioContext||window.webkitAudioContext)();if(audioCtx.state=='suspended')audioCtx.resume();return audioCtx}
+function bunyiTik(){if(!suaraOn)return;try{let c=getCtx();let o=c.createOscillator();let g=c.createGain();o.connect(g);g.connect(c.destination);o.type='square';o.frequency.value=900;g.gain.value=0.08;o.start();o.stop(c.currentTime+0.05)}catch(e){}}
+function bunyiMenang(){if(!suaraOn)return;try{let c=getCtx();[523,659,784,1046].forEach((f,i)=>{let o=c.createOscillator();let g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.value=f;g.gain.value=0.15;let t=c.currentTime+i*0.15;o.start(t);o.stop(t+0.3)})}catch(e){}}
+function bunyiGagal(){if(!suaraOn)return;try{let c=getCtx();let o=c.createOscillator();let g=c.createGain();o.connect(g);g.connect(c.destination);o.type='sine';o.frequency.value=200;g.gain.value=0.12;o.start();o.stop(c.currentTime+0.4)}catch(e){}}
+function toggleSuara(){suaraOn=!suaraOn;document.getElementById("btnSuara").innerText=suaraOn?"🔊 Suara: ON":"🔇 Suara: OFF";if(suaraOn)bunyiTik()}
+const hadiah=[{label:"Diskon 10%",kode:"10",warna:"#FCE7F3"},{label:"Coba Lagi",kode:"0",warna:"#DBEAFE"},{label:"Gratis Es Teh",kode:"ESTEH",warna:"#FEF08A"},{label:"Diskon 20%",kode:"20",warna:"#FBCFE8"},{label:"Coba Lagi",kode:"0",warna:"#DBEAFE"},{label:"Gratis Dimsum",kode:"DIMSUM",warna:"#BBF7D0"},{label:"Diskon 15%",kode:"15",warna:"#FDE68A"},{label:"Coba Lagi",kode:"0",warna:"#DBEAFE"}];
+let canvas=document.getElementById("wheel"),ctx=canvas.getContext("2d"),putaran=0;
+function gambar(){let per=2*Math.PI/hadiah.length;hadiah.forEach((h,i)=>{ctx.beginPath();ctx.moveTo(140,140);ctx.arc(140,140,140,i*per,(i+1)*per);ctx.fillStyle=h.warna;ctx.fill();ctx.save();ctx.translate(140,140);ctx.rotate(i*per+per/2);ctx.textAlign="right";ctx.fillStyle="#1E3A8A";ctx.font="bold 11px Arial";ctx.fillText(h.label,130,5);ctx.restore()})}gambar();
+function putar(){let nama=document.getElementById("namaSpin").value.trim();if(!nama){alert("Isi nama dulu!");return}getCtx();let idx=Math.floor(Math.random()*hadiah.length);let per=360/hadiah.length;putaran+=360*5+(360-(idx*per+per/2));canvas.style.transition="transform 4s cubic-bezier(.1,.8,.1,1)";canvas.style.transform=`rotate(${putaran}deg)`;let tik=setInterval(bunyiTik,120);setTimeout(()=>{clearInterval(tik)},3800);setTimeout(()=>{let h=hadiah[idx];if(h.kode=="0"){bunyiGagal();document.getElementById("hasilSpin").innerHTML=`<div style="margin-top:12px"><b>Yah Coba Lagi 😢</b><br><small>Belum rejeki ${nama}, coba lagi!</small></div>`}else{bunyiMenang();let acak=Math.floor(1000+Math.random()*9000);let kode=`BOIS-${h.kode}-${acak}`;document.getElementById("hasilSpin").innerHTML=`<div style="margin-top:12px"><b>🎉 SELAMAT ${nama.toUpperCase()}!</b><br>Kamu dapet <b>${h.label}</b><div class="kode">${kode}</div><small>📸 Screenshot & kasih ke Kasir</small><br><a href="https://wa.me/6281234567890?text=Halo%20784%20BOIS,%20aku%20${nama}%20dapet%20${h.label}%20kode%20${kode}" target="_blank" style="color:#2563EB;font-weight:bold">Kirim ke WA Kasir →</a></div>`}},4100)}
+function booking(){let nama=document.getElementById("rNama").value.trim(),wa=document.getElementById("rWa").value.trim(),acara=document.getElementById("rAcara").value,tgl=document.getElementById("rTanggal").value,jam=document.getElementById("rJam").value,orang=document.getElementById("rOrang").value,cat=document.getElementById("rCatatan").value;if(!nama||!wa||!tgl||!orang){alert("Lengkapi Nama, WA, Tanggal, Jumlah Orang dulu ya!");return}let kode="RSV-"+Math.floor(1000+Math.random()*9000);let data={kode,nama,wa,acara,tgl,jam,orang,cat,status:"Menunggu Konfirmasi",waktu:new Date().toLocaleString("id-ID")};let all=JSON.parse(localStorage.getItem("bois_reservasi")||"[]");all.unshift(data);localStorage.setItem("bois_reservasi",JSON.stringify(all));document.getElementById("hasilRes").innerHTML=`<div style="background:#F0FDF4;border:2px solid #16A34A;border-radius:12px;padding:12px;margin-top:10px;text-align:center"><b>✅ Reservasi Berhasil!</b><br>Atas Nama: <b>${nama}</b><br>Acara: ${acara} • ${orang} orang<br>Tanggal: ${tgl} Jam ${jam}<br><div class="kode">${kode}</div><small>Simpan kode ini! Tunjukkan ke kasir.</small><br><br><a href="https://wa.me/6281234567890?text=Halo%20784%20BOIS,%20aku%20mau%20reservasi%20${acara}%20kode%20${kode}%20atas%20nama%20${nama}%20tanggal%20${tgl}%20jam%20${jam}%20untuk%20${orang}%20orang.%20Catatan:%20${cat}" target="_blank" style="color:#16A34A;font-weight:bold">Kirim Booking ke WA Kasir →</a></div>`;}
+</script></body></html>
